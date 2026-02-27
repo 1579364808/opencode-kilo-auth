@@ -3,29 +3,61 @@ import { authenticateWithDeviceAuthTUI } from "./auth.js"
 import { KILO_API_BASE, KILO_OPENROUTER_BASE } from "./constants.js"
 import { fetchKiloModels } from "./models.js"
 
+function isZeroOrUndefined(value: unknown): boolean {
+  return value === undefined || value === 0
+}
+
+function isLikelyFreeModel(modelID: string, model: any): boolean {
+  if (modelID.includes(":free")) return true
+
+  if (!model?.cost) return false
+
+  const inputCost = model?.cost?.input
+  const outputCost = model?.cost?.output
+  const cacheReadCost = model?.cost?.cache_read
+  const cacheWriteCost = model?.cost?.cache_write
+
+  if (typeof inputCost !== "number" || typeof outputCost !== "number") {
+    return false
+  }
+
+  return (
+    isZeroOrUndefined(inputCost) &&
+    isZeroOrUndefined(outputCost) &&
+    isZeroOrUndefined(cacheReadCost) &&
+    isZeroOrUndefined(cacheWriteCost)
+  )
+}
+
+function pickLikelyFreeModels(models: Record<string, any>): Record<string, any> {
+  const entries = Object.entries(models).filter(([modelID, model]) => isLikelyFreeModel(modelID, model))
+  return Object.fromEntries(entries)
+}
+
 const KiloGatewayPlugin: PluginInstance = async (input: PluginInput): Promise<Hooks> => {
   return {
     config: async (config) => {
       const providers = config.provider ?? {}
       const existingProvider = providers.kilo ?? {}
-      const existingModels = existingProvider.models ?? {}
+      const existingModels = pickLikelyFreeModels(existingProvider.models ?? {})
 
       const baseURL =
         typeof existingProvider.options?.baseURL === "string" ? existingProvider.options.baseURL : undefined
 
       const fetchedModels = await fetchKiloModels({ baseURL })
-      const hasFetchedModels = Object.keys(fetchedModels).length > 0
+      const fetchedFreeModels = pickLikelyFreeModels(fetchedModels)
+      const hasFetchedModels = Object.keys(fetchedFreeModels).length > 0
 
       providers.kilo = {
         ...existingProvider,
         name: existingProvider.name ?? "Kilo Gateway",
-        models: hasFetchedModels ? { ...fetchedModels, ...existingModels } : existingModels,
+        models: hasFetchedModels ? { ...fetchedFreeModels, ...existingModels } : existingModels,
       }
 
       config.provider = providers
 
       if (hasFetchedModels) {
-        console.log(`[opencode-kilo-auth] Synced ${Object.keys(fetchedModels).length} models from Kilo`)
+        console.log(`[opencode-kilo-auth] Synced ${Object.keys(fetchedFreeModels).length} free models from Kilo`)
       }
     },
     auth: {
