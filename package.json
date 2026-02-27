@@ -22,11 +22,7 @@
     "ai",
     "llm",
     "plugin",
-    "free-models",
-    "openrouter",
-    "claude",
-    "gpt",
-    "gemini"
+    "free-models"
   ],
   "engines": {
     "node": ">=20.0.0"
