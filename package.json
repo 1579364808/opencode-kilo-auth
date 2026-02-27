@@ -1,19 +1,19 @@
 {
-  "name": "opencode-kilo-auth",
-  "version": "1.1.4",
+  "name": "@melodyoftears/opencode-kilo-auth",
+  "version": "1.1.5",
   "description": "OpenCode plugin for Kilo Gateway authentication - access free AI models like z-ai/glm-5:free",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "license": "MIT",
-  "author": "JungHoonGhae",
+  "author": "melodyoftears",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JungHoonGhae/opencode-kilo-auth.git"
+    "url": "git+https://github.com/1579364808/opencode-kilo-auth.git"
   },
-  "homepage": "https://github.com/JungHoonGhae/opencode-kilo-auth#readme",
+  "homepage": "https://github.com/1579364808/opencode-kilo-auth#readme",
   "bugs": {
-    "url": "https://github.com/JungHoonGhae/opencode-kilo-auth/issues"
+    "url": "https://github.com/1579364808/opencode-kilo-auth/issues"
   },
   "keywords": [
     "opencode",
@@ -45,7 +45,6 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "fetch-models": "npx tsx scripts/fetch-models.ts",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
