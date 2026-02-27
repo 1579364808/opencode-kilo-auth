@@ -42,6 +42,12 @@ Then choose `Other` and enter `kilo`.
 - GitHub: https://github.com/1579364808/opencode-kilo-auth
 - Kilo Gateway: https://kilo.ai
 
+## Support
+
+If this project helps you, you can support it here:
+
+![Payment QR](https://raw.githubusercontent.com/1579364808/opencode-kilo-auth/main/assets/payment-qr.png)
+
 ## License
 
 MIT. See `LICENSE`.
