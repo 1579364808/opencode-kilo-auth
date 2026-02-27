@@ -3,30 +3,8 @@ import { authenticateWithDeviceAuthTUI } from "./auth.js"
 import { KILO_API_BASE, KILO_OPENROUTER_BASE } from "./constants.js"
 import { fetchKiloModels } from "./models.js"
 
-function isZeroOrUndefined(value: unknown): boolean {
-  return value === undefined || value === 0
-}
-
 function isLikelyFreeModel(modelID: string, model: any): boolean {
-  if (modelID.includes(":free")) return true
-
-  if (!model?.cost) return false
-
-  const inputCost = model?.cost?.input
-  const outputCost = model?.cost?.output
-  const cacheReadCost = model?.cost?.cache_read
-  const cacheWriteCost = model?.cost?.cache_write
-
-  if (typeof inputCost !== "number" || typeof outputCost !== "number") {
-    return false
-  }
-
-  return (
-    isZeroOrUndefined(inputCost) &&
-    isZeroOrUndefined(outputCost) &&
-    isZeroOrUndefined(cacheReadCost) &&
-    isZeroOrUndefined(cacheWriteCost)
-  )
+  return modelID.includes(":free")
 }
 
 function pickLikelyFreeModels(models: Record<string, any>): Record<string, any> {
