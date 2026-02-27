@@ -91,7 +91,10 @@ const KiloGatewayPlugin: PluginInstance = async (input: PluginInput): Promise<Ho
           }
           const maybeAccountId = (auth as any).accountId
           if (maybeAccountId) {
-            result.baseURL = `${KILO_API_BASE}/api/organizations/${maybeAccountId}`
+            result.headers = {
+              ...baseOptions.headers,
+              "X-KILO-ORGANIZATIONID": maybeAccountId,
+            }
           }
           return result
         }
