@@ -47,11 +47,14 @@ const KiloGatewayPlugin: PluginInstance = async (input: PluginInput): Promise<Ho
       const fetchedModels = await fetchKiloModels({ baseURL })
       const fetchedFreeModels = pickLikelyFreeModels(fetchedModels)
       const hasFetchedModels = Object.keys(fetchedFreeModels).length > 0
+      const finalModels = hasFetchedModels ? { ...fetchedFreeModels, ...existingModels } : existingModels
+      const finalModelIDs = Object.keys(finalModels)
 
       providers.kilo = {
         ...existingProvider,
         name: existingProvider.name ?? "Kilo Gateway",
-        models: hasFetchedModels ? { ...fetchedFreeModels, ...existingModels } : existingModels,
+        models: finalModels,
+        whitelist: finalModelIDs,
       }
 
       config.provider = providers
