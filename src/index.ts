@@ -12,6 +12,16 @@ function pickLikelyFreeModels(models: Record<string, any>): Record<string, any> 
   return Object.fromEntries(entries)
 }
 
+function stripReasoningPartsFromMessages(messages: any[]): any[] {
+  return messages.map((message) => {
+    const parts = Array.isArray(message?.parts) ? message.parts : []
+    return {
+      ...message,
+      parts: parts.filter((part: any) => part?.type !== "reasoning"),
+    }
+  })
+}
+
 const KiloGatewayPlugin: PluginInstance = async (input: PluginInput): Promise<Hooks> => {
   return {
     config: async (config) => {
@@ -106,6 +116,9 @@ const KiloGatewayPlugin: PluginInstance = async (input: PluginInput): Promise<Ho
           },
         },
       ],
+    },
+    "experimental.chat.messages.transform": async (_input, output) => {
+      output.messages = stripReasoningPartsFromMessages(output.messages)
     },
   }
 }
