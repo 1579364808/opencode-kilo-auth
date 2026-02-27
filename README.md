@@ -18,7 +18,23 @@ Use Kilo Gateway in OpenCode without using a separate Kilo CLI fork.
 
 ## Installation
 
-Add this plugin to `~/.config/opencode/opencode.json`:
+Install the package (optional but recommended):
+
+```bash
+npm i @melodyoftears/opencode-kilo-auth@latest
+```
+
+Then add the plugin to `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "plugin": [
+    "file:///ABSOLUTE_PATH_TO/node_modules/@melodyoftears/opencode-kilo-auth/dist/index.js"
+  ]
+}
+```
+
+Or use direct npm resolution in config:
 
 ```json
 {
